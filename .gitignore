@@ -1,0 +1,8 @@
+out/
+node_modules/
+.vscode-test/
+*.vsix
+tmp/
+yarn-error.log
+.dccache
+.DS_Store

@@ -1,0 +1,50 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser"
+  },
+  "extends": [
+    "prettier"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier"
+  ],
+  "rules": {
+    "arrow-parens": 2,
+    "no-param-reassign": 0,
+    "@typescript-eslint/ban-ts-ignore": 0,
+    "import/extensions": 0,
+    "@typescript-eslint/camelcase": 0,
+    "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/type-annotation-spacing": 0,
+    "import/prefer-default-export": 0,
+    "class-methods-use-this": 0,
+    "@typescript-eslint/explicit-member-accessibility": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/member-delimiter-style": 0,
+    "@typescript-eslint/no-unused-vars": [
+      2,
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/indent": 0,
+    "space-before-function-paren": 0,
+    "comma-dangle": 0,
+    "prettier/prettier": [
+      2,
+      {
+        "semi": false,
+        "singleQuote": true,
+        "arrowParens": "always",
+        "trailingComma": "es5",
+        "endOfLine": "auto"
+      }
+    ]
+  },
+  "env": {
+    "es6": true
+  }
+}

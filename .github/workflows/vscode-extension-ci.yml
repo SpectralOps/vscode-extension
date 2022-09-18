@@ -1,0 +1,36 @@
+name: CI
+
+env:
+  SPECTRAL_DSN: ${{ secrets.SPECTRAL_DSN }}
+
+on:
+  push:
+jobs:
+  spectral-scan:
+    name: Spectral Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: spectralops/spectral-github-action@v2
+        with:
+          spectral-dsn: ${{ secrets.SPECTRAL_DSN }}
+          spectral-args: scan --include-tags base,iac
+  code-analysis:
+    runs-on: ubuntu-latest
+    container:
+      image: sourceguard/sourceguard-cli
+    steps:
+      - name: SourceGuard Scan
+        uses: CheckPointSW/sourceguard-action@main
+        continue-on-error: false
+        with:
+          SG_CLIENT_ID: ${{ secrets.SG_CLIENT_ID }}
+          SG_SECRET_KEY: ${{ secrets.SG_SECRET_KEY }}
+      - name: Detect done
+        run: echo done
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: yarn && yarn test:unit
