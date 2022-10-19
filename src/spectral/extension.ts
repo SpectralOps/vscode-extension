@@ -30,6 +30,8 @@ import { LoggerService } from '../services/logger-service'
 import { ResultsView } from './results-view'
 import SecretStorageService from '../services/secret-storage-service'
 import { getWorkspaceFolders } from '../common/vs-code'
+import { SpectralConfig } from '../configuration/spectral-config'
+import { AnalyticsService } from '../services/analytics-service'
 
 export class SpectralExtension {
   private workspaceFolders: Array<string> = getWorkspaceFolders()
@@ -51,6 +53,18 @@ export class SpectralExtension {
       const isSpectralInstalled =
         await this.spectralAgentService.checkForSpectralBinary()
       this.setSpectralInstallationContext(isSpectralInstalled)
+      const spectralConfig = await this.getSpectralConfig(vsCodeContext)
+      if (spectralConfig) {
+        AnalyticsService.init(spectralConfig)
+      }
+    } catch (error) {
+      this.logger.error(error)
+    }
+  }
+
+  private async getSpectralConfig(vsCodeContext: ExtensionContext): Promise<SpectralConfig | undefined> {
+    try {
+      return SpectralConfig.get(vsCodeContext.extensionPath)
     } catch (error) {
       this.logger.error(error)
     }
@@ -77,16 +91,15 @@ export class SpectralExtension {
     const dsn = await secretStorageService.get(SPECTRAL_DSN)
     if (!dsn) {
       await this.contextService.setContext(HAS_DSN, false)
-      try {
-        accessSync(path.join(`${SPECTRAL_FOLDER}/license`))
-        await this.contextService.setContext(HAS_LICENSE, true)
-      } catch (error) {
-        await this.contextService.setContext(HAS_LICENSE, false)
-      }
-
-      return
+    } else {
+      await this.contextService.setContext(HAS_DSN, true)
     }
-    await this.contextService.setContext(HAS_DSN, true)
+    try {
+      accessSync(path.join(`${SPECTRAL_FOLDER}/license`))
+      await this.contextService.setContext(HAS_LICENSE, true)
+    } catch (error) {
+      await this.contextService.setContext(HAS_LICENSE, false)
+    }
   }
 
   private registerCommands(vsCodeContext: ExtensionContext): void {

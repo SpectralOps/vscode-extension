@@ -35,6 +35,12 @@ jobs:
       - name: Update package.json version
         run: jq '.version = "${{ steps.patched-tag.outputs.new_version }}"' package.json > tmp.package.json && mv tmp.package.json package.json
 
+      - name: Add Credentials
+        run: |
+          sed -i \
+              -e 's|${env.MIX_PANEL_KEY}|${{ secrets.MIX_PANEL_KEY }}|g' \
+              spectral.config.json
+
       - name: Build
         run: yarn vscode:prepublish
 
@@ -73,7 +79,7 @@ jobs:
         with:
           name: ${{ needs.publish.outputs.new-tag }}
           tag_name: ${{ needs.publish.outputs.new-tag }}
-          body: '${{ steps.extract-release-notes.outputs.release_notes }}'
+          body: "${{ steps.extract-release-notes.outputs.release_notes }}"
           draft: false
           prerelease: false
           fail_on_unmatched_files: true
