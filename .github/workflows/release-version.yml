@@ -36,10 +36,13 @@ jobs:
         run: jq '.version = "${{ steps.patched-tag.outputs.new_version }}"' package.json > tmp.package.json && mv tmp.package.json package.json
 
       - name: Add Credentials
-        run: |
-          sed -i \
-              -e 's|${build.MIX_PANEL_KEY}|${{ secrets.MIX_PANEL_KEY }}|g' \
-              spectral.config.json
+        uses: cschleiden/replace-tokens@v1
+        with:
+          tokenPrefix: '{'
+          tokenSuffix: '}'
+          files: 'spectral.config.json'
+        env:
+          BUILD_MIX_PANEL_KEY: ${{ secrets.MIX_PANEL_KEY }}
 
       - name: Build
         run: yarn vscode:prepublish
