@@ -38,7 +38,7 @@ jobs:
       - name: Add Credentials
         run: |
           sed -i \
-              -e 's|${env.MIX_PANEL_KEY}|${{ secrets.MIX_PANEL_KEY }}|g' \
+              -e 's|${build.MIX_PANEL_KEY}|${{ secrets.MIX_PANEL_KEY }}|g' \
               spectral.config.json
 
       - name: Build
