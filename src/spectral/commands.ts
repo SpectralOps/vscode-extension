@@ -15,6 +15,7 @@ import { ScanState, SPECTRAL_DSN } from '../common/constants'
 import { LoggerService } from '../services/logger-service'
 import { ResultsView } from './results-view'
 import SecretStorageService from '../services/secret-storage-service'
+import { AnalyticsService } from '../services/analytics-service'
 
 export const setDsn = () => {
   showInputBox(
@@ -46,6 +47,7 @@ export const scanWorkSpaceFolders = async ({
   })
   await contextService.setContext(SCAN_STATE, ScanState.inProgress)
   logger.debug('Scan start')
+  AnalyticsService.track('vscode-scan')
   inProgressStatusBarItem.show()
   try {
     await runWithLoaderOnView({

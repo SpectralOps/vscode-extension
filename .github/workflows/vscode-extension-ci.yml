@@ -21,7 +21,7 @@ jobs:
       image: sourceguard/sourceguard-cli
     steps:
       - name: SourceGuard Scan
-        uses: CheckPointSW/sourceguard-action@main
+        uses: CheckPointSW/sourceguard-action@v1.0.0
         continue-on-error: false
         with:
           SG_CLIENT_ID: ${{ secrets.SG_CLIENT_ID }}
