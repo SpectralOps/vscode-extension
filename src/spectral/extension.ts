@@ -30,7 +30,6 @@ import { LoggerService } from '../services/logger-service'
 import { ResultsView } from './results-view'
 import SecretStorageService from '../services/secret-storage-service'
 import { getWorkspaceFolders } from '../common/vs-code'
-import { SpectralConfig } from '../configuration/spectral-config'
 import { AnalyticsService } from '../services/analytics-service'
 
 export class SpectralExtension {
@@ -53,18 +52,7 @@ export class SpectralExtension {
       const isSpectralInstalled =
         await this.spectralAgentService.checkForSpectralBinary()
       this.setSpectralInstallationContext(isSpectralInstalled)
-      const spectralConfig = await this.getSpectralConfig(vsCodeContext)
-      if (spectralConfig) {
-        AnalyticsService.init(spectralConfig)
-      }
-    } catch (error) {
-      this.logger.error(error)
-    }
-  }
-
-  private async getSpectralConfig(vsCodeContext: ExtensionContext): Promise<SpectralConfig | undefined> {
-    try {
-      return SpectralConfig.get(vsCodeContext.extensionPath)
+      AnalyticsService.init()
     } catch (error) {
       this.logger.error(error)
     }

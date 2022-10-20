@@ -1,10 +1,10 @@
-import { SpectralConfig } from "../configuration/spectral-config";
 import { LoggerService } from "./logger-service";
 import Mixpanel from 'mixpanel'
+import spectralConfig from '../spectral.config.json'
 
 export class AnalyticsService {
   private static mixpanel: Mixpanel.Mixpanel
-  static async init(spectralConfig: SpectralConfig): Promise<void> {
+  static init(): void {
     const logger = LoggerService.getInstance()
     try {
       if (!spectralConfig.mixPanelKey) {
