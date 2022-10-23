@@ -1,6 +1,6 @@
-import { LoggerService } from "./logger-service";
+import { LoggerService } from './logger-service'
 import Mixpanel from 'mixpanel'
-import spectralConfig from '../spectral.config.json'
+import spectralConfig from '../../spectral.config.json'
 
 export class AnalyticsService {
   private static mixpanel: Mixpanel.Mixpanel
