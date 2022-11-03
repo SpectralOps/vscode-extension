@@ -147,7 +147,7 @@
 		"build": "rimraf out && tsc -p ./",
 		"pretest": "yarn run build && yarn run lint",
 		"lint": "eslint src --ext ts",
-		"test:unit": "yarn build && mocha --ui tdd -c 'out/test/unit/**/*.test.js'",
+		"test:unit": "yarn build && mocha --ui tdd -c 'out/src/test/unit/**/*.test.js'",
 		"test:integration": "node ./out/test/integration/runTest.js"
 	},
 	"devDependencies": {
