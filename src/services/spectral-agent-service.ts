@@ -51,6 +51,7 @@ export class SpectralAgentService {
       ]
       const options: any = {
         cwd: scanPath,
+        stdio: ['inherit', 'pipe', 'pipe'],
       }
       if (isWindows()) {
         spectralArgs.push('--dsn', dsn)
@@ -62,6 +63,10 @@ export class SpectralAgentService {
 
       child.stderr.setEncoding('utf8')
       const stderrChunks: string[] = []
+      const stdOut: string[] = []
+      child.stdout.on('data', (data) => {
+        stdOut.push(data.toString('utf8'))
+      })
       child.stderr.on('data', (chunk) => {
         return stderrChunks.push(chunk)
       })
