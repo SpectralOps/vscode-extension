@@ -15,7 +15,7 @@ import {
   ScanFinding,
   ScanFindingView,
 } from '../common/types'
-import { FindingSeverityLevel } from '../common/constants'
+import { FindingSeverity, FindingSeverityLevel } from '../common/constants'
 
 export class FindingsProvider implements TreeDataProvider<TreeItem> {
   private readonly findings: FindingsTypeResults
@@ -67,13 +67,34 @@ export class WorkspaceItem extends TreeItem {
 
 export class FindingItem extends TreeItem {
   private iconsPath = {
-    error: join(__filename, '..', '..', 'media', 'error.svg'),
-    warning: join(__filename, '..', '..', 'media', 'warning.svg'),
-    info: join(__filename, '..', '..', 'media', 'info.svg'),
+    [FindingSeverity.critical]: join(
+      __filename,
+      '..',
+      '..',
+      'media',
+      'critical.svg'
+    ),
+    [FindingSeverity.high]: join(__filename, '..', '..', 'media', 'high.svg'),
+    [FindingSeverity.medium]: join(
+      __filename,
+      '..',
+      '..',
+      'media',
+      'medium.svg'
+    ),
+    [FindingSeverity.low]: join(__filename, '..', '..', 'media', 'low.svg'),
+    [FindingSeverity.informational]: join(
+      __filename,
+      '..',
+      '..',
+      'media',
+      'informational.svg'
+    ),
   }
   constructor(finding: ScanFinding) {
     super(finding.rule.name, TreeItemCollapsibleState.None)
     const findingPosition = getFindingRange(finding)
+    this.tooltip = L.capitalize(finding.rule.severity)
     this.iconPath = {
       light: this.iconsPath[finding.rule.severity],
       dark: this.iconsPath[finding.rule.severity],

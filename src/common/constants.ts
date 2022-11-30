@@ -21,17 +21,30 @@ export enum FindingSeverity {
   error = 'error',
   warning = 'warning',
   info = 'info',
+  critical = 'critical',
+  high = 'high',
+  medium = 'medium',
+  low = 'low',
+  informational = 'informational',
 }
 
 export enum FindingSeverityLevel {
-  error = 1,
-  warning = 2,
-  info = 3,
+  critical = 1,
+  high = 2,
+  medium = 3,
+  low = 4,
+  informational = 5,
 }
 
 export enum FindingType {
   secret = 'secret',
   iac = 'iac',
+}
+
+export const severityMapping = {
+  [FindingSeverity.error]: FindingSeverity.high,
+  [FindingSeverity.warning]: FindingSeverity.medium,
+  [FindingSeverity.info]: FindingSeverity.informational,
 }
 
 export const SPECTRAL_FOLDER = `${process.env.HOME}/.spectral`

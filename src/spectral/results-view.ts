@@ -52,14 +52,14 @@ export class ResultsView {
     viewId: string
     viewTitle: string
   }): void {
-    const secretsTree = createTree<TreeItem>({
+    const findingsTree = createTree<TreeItem>({
       viewId: viewId,
       options: {
         treeDataProvider: new FindingsProvider(results),
       },
     })
 
-    secretsTree.title = viewTitle
+    findingsTree.title = viewTitle
   }
 
   private showResultNotification(

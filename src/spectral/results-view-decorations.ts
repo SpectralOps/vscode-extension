@@ -79,9 +79,11 @@ const decorateBySeverity = ({
 }
 
 const severityDecorationsColors = {
-  error: '#ce2c2e',
-  warning: '#dfb22a',
-  info: '#0d83f2',
+  [FindingSeverity.critical]: '#f24e4e',
+  [FindingSeverity.high]: '#ff8000',
+  [FindingSeverity.medium]: '#ffb72d',
+  [FindingSeverity.low]: '#ffdb66',
+  [FindingSeverity.informational]: '#80c3ff',
 }
 
 const createDecorationTypeBySeverity = (

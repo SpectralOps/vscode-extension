@@ -2,7 +2,13 @@ import { spawn } from 'child_process'
 import { readFileSync, unlinkSync } from 'fs'
 import isEmpty from 'lodash/isEmpty'
 import path from 'path'
-import { FindingType, SPECTRAL_DSN, SPECTRAL_FOLDER } from '../common/constants'
+import {
+  FindingSeverity,
+  FindingType,
+  severityMapping,
+  SPECTRAL_DSN,
+  SPECTRAL_FOLDER,
+} from '../common/constants'
 import {
   Findings,
   FindingsAggregations,
@@ -116,6 +122,7 @@ export class SpectralAgentService {
       item.finding = formatWindowsPath(item.finding.replace('\\\\?\\', ''))
     }
 
+    item.rule.severity = this.mapToNewSeverity(item.rule.severity)
     item.finding = item.finding.toLowerCase()
     this.findingsAggregations[item.rule.severity] += 1
     const isIac = item.metadata.tags.includes(FindingType.iac)
@@ -148,6 +155,14 @@ export class SpectralAgentService {
     this.findingsAggregations = {
       [FindingType.secret]: 0,
       [FindingType.iac]: 0,
+    }
+  }
+
+  private mapToNewSeverity(itemSeverity: FindingSeverity): FindingSeverity {
+    if (severityMapping[itemSeverity]) {
+      return severityMapping[itemSeverity]
+    } else {
+      return itemSeverity
     }
   }
 }
