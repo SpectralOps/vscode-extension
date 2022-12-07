@@ -17,6 +17,7 @@ import {
 } from 'vscode'
 import {
   CONTEXT_PREFIX,
+  FindingSeverity,
   FINDING_POSITION_COL_INDEX,
   FINDING_POSITION_LINE_INDEX,
   PLAYBOOKS_URL,
@@ -134,9 +135,11 @@ export const showInputBox = (
 }
 
 const severityToDiagnosticSeverity = {
-  error: DiagnosticSeverity.Error,
-  warning: DiagnosticSeverity.Warning,
-  info: DiagnosticSeverity.Information,
+  [FindingSeverity.critical]: DiagnosticSeverity.Error,
+  [FindingSeverity.high]: DiagnosticSeverity.Error,
+  [FindingSeverity.medium]: DiagnosticSeverity.Warning,
+  [FindingSeverity.low]: DiagnosticSeverity.Warning,
+  [FindingSeverity.informational]: DiagnosticSeverity.Information,
 }
 
 export const appendFindingsToProblemsChannel = (
