@@ -57,7 +57,6 @@ export class SpectralAgentService {
       ]
       const options: any = {
         cwd: scanPath,
-        stdio: ['inherit', 'pipe', 'pipe'],
       }
       if (isWindows()) {
         spectralArgs.push('--dsn', dsn)
