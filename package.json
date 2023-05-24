@@ -95,7 +95,7 @@
 			},
 			{
 				"view": "spectral.views.welcome",
-				"contents": "Welcome to Spectral for Visual Studio Code. We noticed that Spectral is not installed on your machine. \nplease refer to our docs for more details on [how to install Spectral](https://get.spectralops.io/docs/).",
+				"contents": "Welcome to Spectral for Visual Studio Code. We noticed that Spectral is not installed on your machine. \nPlease refer to our docs for more details on [how to install Spectral](https://guides.spectralops.io/docs/how-to-get-started).",
 				"when": "!spectral:hasSpectralInstalled"
 			},
 			{
