@@ -1,5 +1,9 @@
 # SpectralOps - Automated Code Security Change Log
 
+## [1.0.18]
+
+- Remove the usage of --ok flag
+
 ## [1.0.14]
 
 - Support spectral yaml

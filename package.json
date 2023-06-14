@@ -2,7 +2,7 @@
 	"name": "spectral-vscode-extension",
 	"displayName": "SpectralOps - A Check Point Solution",
 	"description": "Monitor your code for exposed API keys, tokens, credentials, and high-risk security misconfigurations",
-	"version": "1.0.14",
+	"version": "1.0.18",
 	"publisher": "SpectralOps",
 	"icon": "media/spectral.png",
 	"homepage": "https://spectralops.io/",
