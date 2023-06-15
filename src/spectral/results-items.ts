@@ -10,11 +10,7 @@ import L from 'lodash'
 import { basename, dirname, join } from 'path'
 import isEmpty from 'lodash/isEmpty'
 import { getFindingRange } from '../common/vs-code'
-import {
-  FindingsTypeResults,
-  ScanFinding,
-  ScanFindingView,
-} from '../common/types'
+import { FindingsTypeResults, ScanFindingView } from '../common/types'
 import { FindingSeverity, FindingSeverityLevel } from '../common/constants'
 
 export class FindingsProvider implements TreeDataProvider<TreeItem> {
@@ -91,8 +87,8 @@ export class FindingItem extends TreeItem {
       'informational.svg'
     ),
   }
-  constructor(finding: ScanFinding) {
-    super(finding.rule.name, TreeItemCollapsibleState.None)
+  constructor(finding: ScanFindingView) {
+    super(finding.labelDisplayName, TreeItemCollapsibleState.None)
     const findingPosition = getFindingRange(finding)
     this.tooltip = L.capitalize(finding.rule.severity)
     this.iconPath = {
@@ -110,7 +106,7 @@ export class FindingItem extends TreeItem {
 export class FileItem extends TreeItem {
   findingNodes: Array<FindingItem>
 
-  constructor(filePath: string, findings: Array<ScanFinding>) {
+  constructor(filePath: string, findings: Array<ScanFindingView>) {
     super(basename(filePath), TreeItemCollapsibleState.Collapsed)
     this.resourceUri = Uri.file(filePath)
     this.iconPath = ThemeIcon.File

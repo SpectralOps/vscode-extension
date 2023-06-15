@@ -130,12 +130,20 @@ export class SpectralAgentService {
 
     item.rule.severity = this.mapToNewSeverity(item.rule.severity)
     item.finding = item.finding.toLowerCase()
+    item.labelDisplayName = item.rule.name
+
     this.findingsAggregations[item.rule.severity] += 1
     const isIac = item.metadata.tags.includes(FindingType.iac)
+    const isOss = item.metadata.tags.includes(FindingType.oss)
+
     let findingTypeResults
     if (isIac) {
       findingTypeResults = this.findings[FindingType.iac]
       this.findingsAggregations[FindingType.iac] += 1
+    } else if (isOss) {
+      item.labelDisplayName = `${item.rule.name} - ${item.rule.id}`
+      findingTypeResults = this.findings[FindingType.oss]
+      this.findingsAggregations[FindingType.oss] += 1
     } else {
       findingTypeResults = this.findings[FindingType.secret]
       this.findingsAggregations[FindingType.secret] += 1
@@ -157,10 +165,15 @@ export class SpectralAgentService {
   }
 
   private resetFindings() {
-    this.findings = { [FindingType.iac]: {}, [FindingType.secret]: {} }
+    this.findings = {
+      [FindingType.iac]: {},
+      [FindingType.secret]: {},
+      [FindingType.oss]: {},
+    }
     this.findingsAggregations = {
       [FindingType.secret]: 0,
       [FindingType.iac]: 0,
+      [FindingType.oss]: 0,
     }
   }
 

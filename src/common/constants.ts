@@ -9,6 +9,7 @@ export const SCAN_STATE = 'scanState'
 export const PRE_SCAN = 'preScan'
 export const SPECTRAL_VIEW_SECRETS = 'spectral.views.secrets'
 export const SPECTRAL_VIEW_IAC = 'spectral.views.iac'
+export const SPECTRAL_VIEW_OSS = 'spectral.views.oss'
 
 export enum ScanState {
   preScan = 'preScan',
@@ -39,11 +40,13 @@ export enum FindingSeverityLevel {
 export enum FindingType {
   secret = 'secret',
   iac = 'iac',
+  oss = 'oss',
 }
 
 export enum ScanEngine {
   secrets = 'secrets',
   iac = 'iac',
+  oss = 'oss',
 }
 
 export const severityMapping = {

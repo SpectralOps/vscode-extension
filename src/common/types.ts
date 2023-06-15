@@ -8,6 +8,7 @@ export type FindingsTypeResults = Record<string, Array<ScanFinding>>
 export type FindingsAggregations = {
   secret: number
   iac: number
+  oss: number
 }
 
 export type ScanResult = {
@@ -23,6 +24,7 @@ export interface ScanFinding {
 
 export interface ScanFindingView extends ScanFinding {
   rootPath: string
+  labelDisplayName: string
 }
 
 type FindingMetadata = {

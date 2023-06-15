@@ -84,6 +84,11 @@
 					"id": "spectral.views.iac",
 					"name": "IaC",
 					"when": "spectral:scanState == 'success' || spectral:scanState == 'inProgress' && !spectral:preScan"
+				},
+				{
+					"id": "spectral.views.oss",
+					"name": "Open Source",
+					"when": "spectral:scanState == 'success' || spectral:scanState == 'inProgress' && !spectral:preScan"
 				}
 			]
 		},
@@ -154,6 +159,12 @@
 							"description": "Use infrastructure as code engine kind (Supported with Spectral version higher then 1.10.48, for IaC scan with lower version add 'iac' as includeTags)",
 							"scope": "resource"
 					},
+					"spectral.scan.engines.useOssEngine": {
+						"type": "boolean",
+						"default": false,
+						"description": "Use open source engine kind (Supported with Spectral version higher then 1.10.48)",
+						"scope": "resource"
+				},
 					"spectral.scan.includeTags": {
 							"type": "array",
 							"items": {

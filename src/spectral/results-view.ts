@@ -10,7 +10,11 @@ import {
   FindingsAggregations,
   FindingsTypeResults,
 } from '../common/types'
-import { SPECTRAL_VIEW_IAC, SPECTRAL_VIEW_SECRETS } from '../common/constants'
+import {
+  SPECTRAL_VIEW_IAC,
+  SPECTRAL_VIEW_OSS,
+  SPECTRAL_VIEW_SECRETS,
+} from '../common/constants'
 import { FindingsProvider } from './results-items'
 
 export class ResultsView {
@@ -33,6 +37,12 @@ export class ResultsView {
       results: findings.iac,
       viewId: SPECTRAL_VIEW_IAC,
       viewTitle: `IaC (${findingsAggregations.iac})`,
+    })
+
+    this.createResultsViews({
+      results: findings.oss,
+      viewId: SPECTRAL_VIEW_OSS,
+      viewTitle: `Open Source (${findingsAggregations.oss})`,
     })
 
     if (this.problemsCollection) {

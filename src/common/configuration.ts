@@ -3,6 +3,7 @@ import { ScanEngine } from './constants'
 
 export const CONFIGURATION_IDENTIFIER = 'spectral'
 export const USE_IAC_ENGINE_SETTING = 'scan.engines.useIacEngine'
+export const USE_OSS_ENGINE_SETTING = 'scan.engines.useOssEngine'
 export const USE_SECRET_ENGINE_SETTING = 'scan.engines.useSecretsEngine'
 export const INCLUDE_TAGS_SETTING = 'scan.includeTags'
 
@@ -52,6 +53,13 @@ export class Configuration {
     )
     if (useIacEngine) {
       engines.push(ScanEngine.iac)
+    }
+    const useOssEngine = this.extensionConfig.get<boolean>(
+      USE_OSS_ENGINE_SETTING,
+      true
+    )
+    if (useOssEngine) {
+      engines.push(ScanEngine.oss)
     }
     return engines.join(',')
   }
