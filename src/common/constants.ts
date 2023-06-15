@@ -41,6 +41,11 @@ export enum FindingType {
   iac = 'iac',
 }
 
+export enum ScanEngine {
+  secrets = 'secrets',
+  iac = 'iac',
+}
+
 export const severityMapping = {
   [FindingSeverity.error]: FindingSeverity.high,
   [FindingSeverity.warning]: FindingSeverity.medium,

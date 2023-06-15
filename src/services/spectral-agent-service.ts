@@ -18,6 +18,7 @@ import {
 import { formatWindowsPath, isWindows } from '../common/utils'
 
 import SecretStorageService from './secret-storage-service'
+import { Configuration } from '../common/configuration'
 
 export class SpectralAgentService {
   public findings: Findings
@@ -48,8 +49,6 @@ export class SpectralAgentService {
       const spectralArgs = [
         '--nobanners',
         'scan',
-        '--include-tags',
-        'base,iac',
         '--nosend',
         '--ok',
         '--internal-output',
@@ -57,6 +56,14 @@ export class SpectralAgentService {
       ]
       const options: any = {
         cwd: scanPath,
+      }
+      const engines = Configuration.getInstance().engines
+      if (!isEmpty(engines)) {
+        spectralArgs.push('--engines', engines)
+      }
+      const tags = Configuration.getInstance().includeTags
+      if (!isEmpty(tags)) {
+        spectralArgs.push('--include-tags', tags)
       }
       if (isWindows()) {
         spectralArgs.push('--dsn', dsn)

@@ -1,5 +1,9 @@
 # SpectralOps - Automated Code Security Change Log
 
+## [1.1.0]
+
+- Support user configuration for 'engines' and 'includesTags' flags
+
 ## [1.0.14]
 
 - Support spectral yaml

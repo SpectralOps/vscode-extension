@@ -137,6 +137,34 @@
 					"when": "spectral:hasSpectralInstalled"
 				}
 			]
+		},
+		"configuration": {
+			"type": "object",
+			"title": "Spectral",
+			"properties": {
+					"spectral.scan.engines.useSecretsEngine": {
+							"type": "boolean",
+							"default": false,
+							"description": "Use Secrets and misconfigurations engine kind (Supported with Spectral version higher then 1.10.48)",
+							"scope": "resource"
+					},
+					"spectral.scan.engines.useIacEngine": {
+							"type": "boolean",
+							"default": false,
+							"description": "Use infrastructure as code engine kind (Supported with Spectral version higher then 1.10.48, for IaC scan with lower version add 'iac' as includeTags)",
+							"scope": "resource"
+					},
+					"spectral.scan.includeTags": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							},
+							"maxItems": 100,
+							"default": [],
+							"description": "Scan include tags",
+							"scope": "resource"
+					}
+			}
 		}
 	},
 	"scripts": {

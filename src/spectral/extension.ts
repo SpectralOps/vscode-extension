@@ -31,6 +31,7 @@ import { ResultsView } from './results-view'
 import SecretStorageService from '../services/secret-storage-service'
 import { getWorkspaceFolders } from '../common/vs-code'
 import { AnalyticsService } from '../services/analytics-service'
+import { Configuration } from '../common/configuration'
 
 export class SpectralExtension {
   private workspaceFolders: Array<string> = getWorkspaceFolders()
@@ -42,6 +43,7 @@ export class SpectralExtension {
   constructor() {
     this.contextService = ContextService.getInstance()
     this.logger = LoggerService.getInstance()
+    Configuration.getInstance(workspace)
     this.spectralAgentService = new SpectralAgentService()
     this.resultsView = new ResultsView()
   }
