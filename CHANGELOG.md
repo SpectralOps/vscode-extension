@@ -3,6 +3,7 @@
 ## [1.0.18]
 
 - Remove the usage of --ok flag
+- Reset issues before scanning workspace folders
 
 ## [1.0.14]
 
