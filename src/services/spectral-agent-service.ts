@@ -101,10 +101,17 @@ export class SpectralAgentService {
   }
 
   public processResults(results: ScanResult, folderPath: string) {
-    this.resetFindings()
     results?.items?.forEach((item: ScanFindingView) => {
       this.processFindingItem({ item, folderPath: folderPath.toLowerCase() })
     })
+  }
+
+  public resetFindings() {
+    this.findings = { [FindingType.iac]: {}, [FindingType.secret]: {} }
+    this.findingsAggregations = {
+      [FindingType.secret]: 0,
+      [FindingType.iac]: 0,
+    }
   }
 
   private processFindingItem({
@@ -147,14 +154,6 @@ export class SpectralAgentService {
     }
 
     return `${SPECTRAL_FOLDER}/spectral`
-  }
-
-  private resetFindings() {
-    this.findings = { [FindingType.iac]: {}, [FindingType.secret]: {} }
-    this.findingsAggregations = {
-      [FindingType.secret]: 0,
-      [FindingType.iac]: 0,
-    }
   }
 
   private mapToNewSeverity(itemSeverity: FindingSeverity): FindingSeverity {
