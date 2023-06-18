@@ -50,7 +50,6 @@ export class SpectralAgentService {
         '--nobanners',
         'scan',
         '--nosend',
-        '--ok',
         '--internal-output',
         outputFileName,
       ]
@@ -85,23 +84,19 @@ export class SpectralAgentService {
       child.on('error', async (err) => {
         return reject(err)
       })
-      child.on('close', async (code) => {
+      child.on('close', async () => {
         if (!isEmpty(stderrChunks)) {
           const agentError = stderrChunks.join('')
           return reject(agentError)
         }
-        if (code === 0) {
-          try {
-            const filePath = path.join(scanPath, outputFileName)
-            const result = readFileSync(filePath, { encoding: 'utf8' })
-            unlinkSync(filePath)
-            const jsonOutput = JSON.parse(result)
-            return resolve(jsonOutput)
-          } catch (err) {
-            return reject(err)
-          }
-        } else {
-          return reject()
+        try {
+          const filePath = path.join(scanPath, outputFileName)
+          const result = readFileSync(filePath, { encoding: 'utf8' })
+          unlinkSync(filePath)
+          const jsonOutput = JSON.parse(result)
+          return resolve(jsonOutput)
+        } catch (err) {
+          return reject(err)
         }
       })
     })

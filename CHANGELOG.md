@@ -3,6 +3,7 @@
 ## [1.1.0]
 
 - Support user configuration for 'engines' and 'includesTags' flags
+- Remove the usage of --ok flag
 
 ## [1.0.14]
 
