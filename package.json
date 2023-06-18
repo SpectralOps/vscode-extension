@@ -42,7 +42,8 @@
 			{
 				"command": "spectral.scan",
 				"title": "Spectral scan",
-				"icon": "$(refresh)"
+				"icon": "$(refresh)",
+				"category": "Spectral"
 			},
 			{
 				"command": "spectral.showOutput",
@@ -51,7 +52,8 @@
 			{
 				"command": "spectral.setDsn",
 				"title": "Spectral Set DSN",
-				"icon": "$(settings-gear)"
+				"icon": "$(settings-gear)",
+				"category": "Spectral"
 			}
 		],
 		"viewsContainers": {
@@ -118,12 +120,12 @@
 			"view/title": [
 				{
 					"command": "spectral.scan",
-					"when": "!spectral:preScan || spectral:scanState == 'failed' && spectral:hasSpectralInstalled && spectral:hasDsn || spectral:hasLicense",
+					"when": "view == spectral.views.secrets || view == spectral.views.scanState",
 					"group": "navigation"
 				},
 				{
 					"command": "spectral.setDsn",
-					"when": "spectral:hasSpectralInstalled && spectral:hasDsn || spectral:hasLicense",
+					"when": "view == spectral.views.secrets || view == spectral.views.welcome || view == spectral.views.scanState && spectral:hasSpectralInstalled || spectral:hasLicense",
 					"group": "navigation"
 				}
 			],

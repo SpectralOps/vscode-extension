@@ -102,11 +102,17 @@ export class SpectralAgentService {
   }
 
   public resetFindings() {
-    this.findings = { [FindingType.iac]: {}, [FindingType.secret]: {} }
-    this.findingsAggregations = {
-      [FindingType.secret]: 0,
-      [FindingType.iac]: 0,
-    }
+    this.findings = Object.values(FindingType).reduce((acc, key) => {
+      acc[key] = {}
+      return acc
+    }, {} as Findings)
+    this.findingsAggregations = Object.values(FindingType).reduce(
+      (acc, key) => {
+        acc[key] = 0
+        return acc
+      },
+      {} as FindingsAggregations
+    )
   }
 
   private processFindingItem({

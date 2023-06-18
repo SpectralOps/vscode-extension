@@ -5,10 +5,7 @@ export type Findings = Record<FindingType, FindingsTypeResults>
 
 export type FindingsTypeResults = Record<string, Array<ScanFinding>>
 
-export type FindingsAggregations = {
-  secret: number
-  iac: number
-}
+export type FindingsAggregations = Record<FindingType, number>
 
 export type ScanResult = {
   items: Array<ScanFinding>
