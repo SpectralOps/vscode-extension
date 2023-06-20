@@ -1,34 +1,18 @@
-import { ConfigurationChangeEvent, WorkspaceConfiguration } from 'vscode'
-import { ScanEngine } from './constants'
-
-export const CONFIGURATION_IDENTIFIER = 'spectral'
-export const USE_IAC_ENGINE_SETTING = 'scan.engines.useIacEngine'
-export const USE_OSS_ENGINE_SETTING = 'scan.engines.useOssEngine'
-export const USE_SECRET_ENGINE_SETTING = 'scan.engines.useSecretsEngine'
-export const INCLUDE_TAGS_SETTING = 'scan.includeTags'
-
-const prefixIdentifier = (settings: Array<string>) =>
-  settings.map((setting) => `${CONFIGURATION_IDENTIFIER}.${setting}`)
+import { WorkspaceConfiguration } from 'vscode'
+import {
+  CONFIGURATION_IDENTIFIER,
+  INCLUDE_TAGS_SETTING,
+  ScanEngine,
+  USE_IAC_ENGINE_SETTING,
+  USE_OSS_ENGINE_SETTING,
+  USE_SECRET_ENGINE_SETTING,
+} from './constants'
 
 export class Configuration {
   private extensionConfig: WorkspaceConfiguration
   static instance: Configuration
   constructor(workspace) {
     this.extensionConfig = workspace.getConfiguration(CONFIGURATION_IDENTIFIER)
-    workspace.onDidChangeConfiguration(
-      async (event: ConfigurationChangeEvent): Promise<void> => {
-        const changed = prefixIdentifier([
-          USE_SECRET_ENGINE_SETTING,
-          USE_IAC_ENGINE_SETTING,
-          INCLUDE_TAGS_SETTING,
-        ]).find((setting) => event.affectsConfiguration(setting))
-        if (changed) {
-          this.extensionConfig = workspace.getConfiguration(
-            CONFIGURATION_IDENTIFIER
-          )
-        }
-      }
-    )
   }
 
   public static getInstance(workspace?) {
@@ -68,5 +52,10 @@ export class Configuration {
     return this.extensionConfig
       .get<Array<string>>(INCLUDE_TAGS_SETTING, [])
       .join(',')
+  }
+
+  updateConfiguration = (workspace) => {
+    const extensionConfig = workspace.getConfiguration(CONFIGURATION_IDENTIFIER)
+    this.extensionConfig = extensionConfig
   }
 }
