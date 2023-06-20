@@ -54,7 +54,7 @@ export class Configuration {
       .join(',')
   }
 
-  updateConfiguration = (workspace) => {
+  public updateConfiguration = (workspace) => {
     const extensionConfig = workspace.getConfiguration(CONFIGURATION_IDENTIFIER)
     this.extensionConfig = extensionConfig
   }
