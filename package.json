@@ -149,7 +149,7 @@
 			"properties": {
 					"spectral.scan.engines.useSecretsEngine": {
 							"type": "boolean",
-							"default": false,
+							"default": true,
 							"description": "Secrets and misconfigurations engine (Supported from Spectral version 1.10.48 and above)",
 							"scope": "resource"
 					},

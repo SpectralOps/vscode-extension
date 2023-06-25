@@ -25,22 +25,19 @@ export class Configuration {
   get engines() {
     const engines = []
     const useSecretsEngine = this.extensionConfig.get<boolean>(
-      USE_SECRET_ENGINE_SETTING,
-      true
+      USE_SECRET_ENGINE_SETTING
     )
     if (useSecretsEngine) {
       engines.push(ScanEngine.secrets)
     }
     const useIacEngine = this.extensionConfig.get<boolean>(
-      USE_IAC_ENGINE_SETTING,
-      true
+      USE_IAC_ENGINE_SETTING
     )
     if (useIacEngine) {
       engines.push(ScanEngine.iac)
     }
     const useOssEngine = this.extensionConfig.get<boolean>(
-      USE_OSS_ENGINE_SETTING,
-      true
+      USE_OSS_ENGINE_SETTING
     )
     if (useOssEngine) {
       engines.push(ScanEngine.oss)
