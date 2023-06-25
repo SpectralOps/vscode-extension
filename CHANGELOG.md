@@ -3,6 +3,10 @@
 ## [1.1.0]
 
 - Support user configuration for 'engines' and 'includesTags' flags
+- Support OSS scanning
+
+## [1.0.18]
+
 - Remove the usage of --ok flag
 - Reset issues before scanning workspace folders
 - fix action button bug
