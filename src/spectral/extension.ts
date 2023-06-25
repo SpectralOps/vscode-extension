@@ -71,7 +71,7 @@ export class SpectralExtension {
     vsCodeContext: ExtensionContext
   ): Promise<void> {
     SecretStorageService.init(vsCodeContext)
-    this.contextService.setContext(PRE_SCAN, true)
+    await this.contextService.setContext(PRE_SCAN, true)
     this.registerCommands(vsCodeContext)
     this.registerEvents()
   }

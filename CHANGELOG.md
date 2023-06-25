@@ -4,6 +4,8 @@
 
 - Support user configuration for 'engines' and 'includesTags' flags
 - Remove the usage of --ok flag
+- Reset issues before scanning workspace folders
+- fix action button bug
 
 ## [1.0.14]
 

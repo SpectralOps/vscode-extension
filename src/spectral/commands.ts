@@ -50,6 +50,7 @@ export const scanWorkSpaceFolders = async ({
   AnalyticsService.track('vscode-scan')
   inProgressStatusBarItem.show()
   try {
+    spectralAgentService.resetFindings()
     await runWithLoaderOnView({
       viewId: SPECTRAL_VIEW_SECRETS,
       action: () =>
