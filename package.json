@@ -152,19 +152,19 @@
 					"spectral.scan.engines.useSecretsEngine": {
 							"type": "boolean",
 							"default": true,
-							"description": "Secrets and misconfigurations engine (Supported from Spectral version 1.10.48 and above)",
+							"description": "Scan for secrets",
 							"scope": "resource"
 					},
 					"spectral.scan.engines.useIacEngine": {
 							"type": "boolean",
 							"default": false,
-							"description": "Infrastructure as code engine (Supported from Spectral version 1.10.48 and above, for IaC scan with lower version add 'iac' as includeTags)",
+							"description": "Scan for infrastructure as code",
 							"scope": "resource"
 					},
 					"spectral.scan.engines.useOssEngine": {
 						"type": "boolean",
 						"default": false,
-						"description": "Open source engine (Supported from Spectral version 1.10.48 and above)",
+						"description": "Scan open source packages",
 						"scope": "resource"
 				},
 					"spectral.scan.includeTags": {

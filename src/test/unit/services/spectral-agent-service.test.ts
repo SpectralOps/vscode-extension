@@ -3,6 +3,7 @@ import { SpectralAgentService } from '../../../services/spectral-agent-service'
 import {
   scanIacSingleFinding,
   scanMultipleSecrets,
+  scanOssSingleFinding,
   scanSecretsSingleFinding,
   scanSingleFindingEachType,
 } from '../../mocks/scan-results.mock'
@@ -18,6 +19,15 @@ suite('Spectral agent service', () => {
   })
 
   test('[ok] - process only iac - aggregations should be as items length', () => {
+    const spectralAgentService = new SpectralAgentService()
+    spectralAgentService.processResults(scanOssSingleFinding, 'somePath')
+    assert.strictEqual(
+      spectralAgentService.findingsAggregations.oss,
+      scanOssSingleFinding.items.length
+    )
+  })
+
+  test('[ok] - process only oss - aggregations should be as items length', () => {
     const spectralAgentService = new SpectralAgentService()
     spectralAgentService.processResults(scanIacSingleFinding, 'somePath')
     assert.strictEqual(
