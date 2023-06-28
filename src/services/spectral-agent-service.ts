@@ -18,6 +18,7 @@ import {
 import { formatWindowsPath, isWindows } from '../common/utils'
 
 import SecretStorageService from './secret-storage-service'
+import { Configuration } from '../common/configuration'
 
 export class SpectralAgentService {
   public findings: Findings
@@ -48,14 +49,20 @@ export class SpectralAgentService {
       const spectralArgs = [
         '--nobanners',
         'scan',
-        '--include-tags',
-        'base,iac',
         '--nosend',
         '--internal-output',
         outputFileName,
       ]
       const options: any = {
         cwd: scanPath,
+      }
+      const engines = Configuration.getInstance().engines
+      if (!isEmpty(engines)) {
+        spectralArgs.push('--engines', engines)
+      }
+      const tags = Configuration.getInstance().includeTags
+      if (!isEmpty(tags)) {
+        spectralArgs.push('--include-tags', tags)
       }
       if (isWindows()) {
         spectralArgs.push('--dsn', dsn)
@@ -131,12 +138,20 @@ export class SpectralAgentService {
 
     item.rule.severity = this.mapToNewSeverity(item.rule.severity)
     item.finding = item.finding.toLowerCase()
+    item.labelDisplayName = item.rule.name
+
     this.findingsAggregations[item.rule.severity] += 1
     const isIac = item.metadata.tags.includes(FindingType.iac)
+    const isOss = item.metadata.tags.includes(FindingType.oss)
+
     let findingTypeResults
     if (isIac) {
       findingTypeResults = this.findings[FindingType.iac]
       this.findingsAggregations[FindingType.iac] += 1
+    } else if (isOss) {
+      item.labelDisplayName = `${item.rule.name} - ${item.rule.id}`
+      findingTypeResults = this.findings[FindingType.oss]
+      this.findingsAggregations[FindingType.oss] += 1
     } else {
       findingTypeResults = this.findings[FindingType.secret]
       this.findingsAggregations[FindingType.secret] += 1

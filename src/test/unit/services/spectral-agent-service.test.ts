@@ -3,6 +3,7 @@ import { SpectralAgentService } from '../../../services/spectral-agent-service'
 import {
   scanIacSingleFinding,
   scanMultipleSecrets,
+  scanOssSingleFinding,
   scanSecretsSingleFinding,
   scanSingleFindingEachType,
 } from '../../mocks/scan-results.mock'
@@ -26,15 +27,30 @@ suite('Spectral agent service', () => {
     )
   })
 
+  test('[ok] - process only oss - aggregations should be as items length', () => {
+    const spectralAgentService = new SpectralAgentService()
+    spectralAgentService.processResults(scanOssSingleFinding, 'somePath')
+    assert.strictEqual(
+      spectralAgentService.findingsAggregations.oss,
+      scanOssSingleFinding.items.length
+    )
+  })
+
   test('[ok] - process both finding types - aggregations should be as items length', () => {
     const spectralAgentService = new SpectralAgentService()
     spectralAgentService.processResults(scanSingleFindingEachType, 'somePath')
     const expectedIacItems = 1
+    const expectedOssItems = 1
     const expectedSecretsItems = 1
     assert.strictEqual(
       spectralAgentService.findingsAggregations.iac,
       expectedIacItems,
       'iac validation failed'
+    )
+    assert.strictEqual(
+      spectralAgentService.findingsAggregations.oss,
+      expectedOssItems,
+      'oss validation failed'
     )
     assert.strictEqual(
       spectralAgentService.findingsAggregations.secret,
@@ -53,7 +69,7 @@ suite('Spectral agent service', () => {
   test('[ok] - process finding - different findings should be aggregated by different finding path', () => {
     const spectralAgentService = new SpectralAgentService()
     spectralAgentService.processResults(scanMultipleSecrets, 'somePath')
-    const expectedKeys = scanSingleFindingEachType.items.length
+    const expectedKeys = 2
     const actualKeys = Object.keys(spectralAgentService.findings.secret).length
     assert.strictEqual(actualKeys, expectedKeys)
   })

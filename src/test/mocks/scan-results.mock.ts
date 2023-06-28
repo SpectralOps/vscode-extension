@@ -44,8 +44,34 @@ export const scanIacSingleFinding: ScanResult = {
   ],
 }
 
+export const scanOssSingleFinding: ScanResult = {
+  items: [
+    {
+      finding: '/Users/testUser/git/vscode-extension/package-lock.json',
+      position: {
+        start: [1, 1],
+        end: [1, 1],
+      },
+      rule: {
+        id: 'CVE-2018-20834',
+        name: 'CVE-2018-20834',
+        severity: FindingSeverity.high,
+        description:
+          'A vulnerability was found in node-tar before version 4.4.2 (excluding version 2.2.2). An Arbitrary File Overwrite issue exists when extracting a tarball containing a hardlink to a file that already exists on the system, in conjunction with a later plain file with the same name as the hardlink. This plain file content replaces the existing file content. A patch has been applied to node-tar v2.2.2).',
+      },
+      metadata: {
+        tags: ['oss'],
+      },
+    },
+  ],
+}
+
 export const scanSingleFindingEachType: ScanResult = {
-  items: concat(scanSecretsSingleFinding.items, scanIacSingleFinding.items),
+  items: concat(
+    scanSecretsSingleFinding.items,
+    scanIacSingleFinding.items,
+    scanOssSingleFinding.items
+  ),
 }
 
 export const scanMultipleSecrets: ScanResult = {

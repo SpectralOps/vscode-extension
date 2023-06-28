@@ -20,6 +20,7 @@ export interface ScanFinding {
 
 export interface ScanFindingView extends ScanFinding {
   rootPath: string
+  labelDisplayName: string
 }
 
 type FindingMetadata = {

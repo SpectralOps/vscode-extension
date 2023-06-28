@@ -2,7 +2,7 @@
 	"name": "spectral-vscode-extension",
 	"displayName": "SpectralOps - A Check Point Solution",
 	"description": "Monitor your code for exposed API keys, tokens, credentials, and high-risk security misconfigurations",
-	"version": "1.0.18",
+	"version": "1.1.0",
 	"publisher": "SpectralOps",
 	"icon": "media/spectral.png",
 	"homepage": "https://spectralops.io/",
@@ -86,6 +86,11 @@
 					"id": "spectral.views.iac",
 					"name": "IaC",
 					"when": "spectral:scanState == 'success' || spectral:scanState == 'inProgress' && !spectral:preScan"
+				},
+				{
+					"id": "spectral.views.oss",
+					"name": "Open Source",
+					"when": "spectral:scanState == 'success' || spectral:scanState == 'inProgress' && !spectral:preScan"
 				}
 			]
 		},
@@ -139,6 +144,40 @@
 					"when": "spectral:hasSpectralInstalled"
 				}
 			]
+		},
+		"configuration": {
+			"type": "object",
+			"title": "Spectral",
+			"properties": {
+					"spectral.scan.engines.useSecretsEngine": {
+							"type": "boolean",
+							"default": true,
+							"description": "Scan for secrets",
+							"scope": "resource"
+					},
+					"spectral.scan.engines.useIacEngine": {
+							"type": "boolean",
+							"default": false,
+							"description": "Scan for infrastructure as code",
+							"scope": "resource"
+					},
+					"spectral.scan.engines.useOssEngine": {
+						"type": "boolean",
+						"default": false,
+						"description": "Scan open source packages",
+						"scope": "resource"
+				},
+					"spectral.scan.includeTags": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							},
+							"maxItems": 100,
+							"default": [],
+							"description": "Scan include tags",
+							"scope": "resource"
+					}
+			}
 		}
 	},
 	"scripts": {

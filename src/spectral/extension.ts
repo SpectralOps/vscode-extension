@@ -5,11 +5,17 @@ import {
   workspace,
   WorkspaceFoldersChangeEvent,
   TextEditor,
+  ConfigurationChangeEvent,
 } from 'vscode'
 import {
+  CONFIGURATION_IDENTIFIER,
+  INCLUDE_TAGS_SETTING,
   SPECTRAL_SCAN,
   SPECTRAL_SET_DSN,
   SPECTRAL_SHOW_OUTPUT,
+  USE_IAC_ENGINE_SETTING,
+  USE_OSS_ENGINE_SETTING,
+  USE_SECRET_ENGINE_SETTING,
 } from '../common/constants'
 import {
   HAS_DSN,
@@ -31,17 +37,20 @@ import { ResultsView } from './results-view'
 import SecretStorageService from '../services/secret-storage-service'
 import { getWorkspaceFolders } from '../common/vs-code'
 import { AnalyticsService } from '../services/analytics-service'
+import { Configuration } from '../common/configuration'
 
 export class SpectralExtension {
   private workspaceFolders: Array<string> = getWorkspaceFolders()
   private readonly contextService: ContextService
   private readonly logger: LoggerService
+  private readonly configuration: Configuration
   private readonly spectralAgentService: SpectralAgentService
   private readonly resultsView: ResultsView
 
   constructor() {
     this.contextService = ContextService.getInstance()
     this.logger = LoggerService.getInstance()
+    this.configuration = Configuration.getInstance(workspace)
     this.spectralAgentService = new SpectralAgentService()
     this.resultsView = new ResultsView()
   }
@@ -124,5 +133,19 @@ export class SpectralExtension {
     window.onDidChangeActiveTextEditor((event: TextEditor | undefined) => {
       updateFindingsDecorations(event, this.spectralAgentService.findings)
     })
+    workspace.onDidChangeConfiguration(
+      async (event: ConfigurationChangeEvent): Promise<void> => {
+        const changed = [
+          `${CONFIGURATION_IDENTIFIER}.${USE_SECRET_ENGINE_SETTING}`,
+          `${CONFIGURATION_IDENTIFIER}.${USE_IAC_ENGINE_SETTING}`,
+          `${CONFIGURATION_IDENTIFIER}.${USE_OSS_ENGINE_SETTING}`,
+          `${CONFIGURATION_IDENTIFIER}.${INCLUDE_TAGS_SETTING}`,
+        ].find((setting) => event.affectsConfiguration(setting))
+        if (changed) {
+          workspace.getConfiguration(CONFIGURATION_IDENTIFIER)
+          this.configuration.updateConfiguration(workspace)
+        }
+      }
+    )
   }
 }
