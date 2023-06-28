@@ -67,7 +67,11 @@ export const scanOssSingleFinding: ScanResult = {
 }
 
 export const scanSingleFindingEachType: ScanResult = {
-  items: concat(scanSecretsSingleFinding.items, scanIacSingleFinding.items),
+  items: concat(
+    scanSecretsSingleFinding.items,
+    scanIacSingleFinding.items,
+    scanOssSingleFinding.items
+  ),
 }
 
 export const scanMultipleSecrets: ScanResult = {
