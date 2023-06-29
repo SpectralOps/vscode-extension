@@ -3,6 +3,7 @@ import { SpectralAgentService } from '../services/spectral-agent-service'
 import { updateFindingsDecorations } from './results-view-decorations'
 import {
   AGENT_LAST_UPDATE_DATE,
+  ENABLE_INSTALL_AGENT,
   HAS_DSN,
   HAS_SPECTRAL_INSTALLED,
   PRE_SCAN,
@@ -22,7 +23,7 @@ import { LoggerService } from '../services/logger-service'
 import { ResultsView } from './results-view'
 import SecretStorageService from '../services/secret-storage-service'
 import { AnalyticsService } from '../services/analytics-service'
-import { ExtensionContext } from '../common/extension-context'
+import { PersistenceContext } from '../common/persistence-context'
 
 export const setDsn = () => {
   showInputBox(
@@ -58,7 +59,7 @@ export const scanWorkSpaceFolders = async ({
     text: `$(loading~spin)`,
     tooltip: 'Spectral is scanning',
   })
-  await contextService.setContext(SCAN_STATE, ScanState.inProgress)
+  contextService.setContext(SCAN_STATE, ScanState.inProgress)
   logger.debug('Scan start')
   AnalyticsService.track('vscode-scan')
   inProgressStatusBarItem.show()
@@ -70,7 +71,7 @@ export const scanWorkSpaceFolders = async ({
         scanWorkspaces({ spectralAgentService, foldersPath, logger }),
     })
   } catch (error) {
-    await contextService.setContext(SCAN_STATE, 'failed')
+    contextService.setContext(SCAN_STATE, 'failed')
     inProgressStatusBarItem.dispose()
     logger.error(error)
     ShowNotificationMessage({
@@ -81,9 +82,9 @@ export const scanWorkSpaceFolders = async ({
     return
   }
 
-  await contextService.setContext(SCAN_STATE, ScanState.success)
+  contextService.setContext(SCAN_STATE, ScanState.success)
   logger.debug('Scan finished')
-  await contextService.setContext(PRE_SCAN, false)
+  contextService.setContext(PRE_SCAN, false)
 
   inProgressStatusBarItem.dispose()
 
@@ -107,23 +108,35 @@ export const setupSpectral = async (
     text: `$(loading~spin)`,
     tooltip: 'Installing Spectral',
   })
-  try {
-    inProgressStatusBarItem.show()
-    await spectralAgentService.installSpectral()
-    inProgressStatusBarItem.dispose()
-    const contextService = ContextService.getInstance()
-    await contextService.setContext(HAS_SPECTRAL_INSTALLED, true)
-    const extensionContext = ExtensionContext.getInstance()
-    extensionContext.updateGlobalStateValue(AGENT_LAST_UPDATE_DATE, Date.now())
-  } catch (error) {
-    inProgressStatusBarItem.dispose()
-    const logger = LoggerService.getInstance()
-    logger.error(error)
+  const contextService = ContextService.getInstance()
+  if (contextService.getContext(ENABLE_INSTALL_AGENT)) {
+    try {
+      contextService.setContext(ENABLE_INSTALL_AGENT, false)
+      inProgressStatusBarItem.show()
+      await spectralAgentService.installSpectral()
+      inProgressStatusBarItem.dispose()
+      contextService.setContext(HAS_SPECTRAL_INSTALLED, true)
+      const extensionContext = PersistenceContext.getInstance()
+      extensionContext.updateGlobalStateValue(
+        AGENT_LAST_UPDATE_DATE,
+        Date.now()
+      )
+    } catch (error) {
+      inProgressStatusBarItem.dispose()
+      const logger = LoggerService.getInstance()
+      logger.error(error)
+      ShowNotificationMessage({
+        messageType: 'error',
+        messageText: `Spectral installation failed`,
+        items: ['See output'],
+      }).then(() => logger.showOutput())
+    }
+    contextService.setContext(ENABLE_INSTALL_AGENT, true)
+  } else {
     ShowNotificationMessage({
-      messageType: 'error',
-      messageText: `Spectral installation failed`,
-      items: ['See output'],
-    }).then(() => logger.showOutput())
+      messageType: 'info',
+      messageText: `Spectral installation is in progress`,
+    })
   }
 }
 
@@ -148,7 +161,7 @@ const scanWorkspaces = async ({
 
 const storeDsn = async (dsn: string): Promise<void> => {
   const secretStorageService = SecretStorageService.getInstance()
-  await secretStorageService.store(SPECTRAL_DSN, dsn)
+  secretStorageService.store(SPECTRAL_DSN, dsn)
   const contextService = ContextService.getInstance()
-  await contextService.setContext(HAS_DSN, true)
+  contextService.setContext(HAS_DSN, true)
 }

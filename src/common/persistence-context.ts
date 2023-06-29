@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
 
-export class ExtensionContext {
+export class PersistenceContext {
   private context?: vscode.ExtensionContext
-  private static instance: ExtensionContext
+  private static instance: PersistenceContext
 
   public static getInstance() {
     if (!this.instance) {
-      this.instance = new ExtensionContext()
+      this.instance = new PersistenceContext()
     }
 
     return this.instance

@@ -20,9 +20,9 @@ export class ContextService {
     return this.viewContext[key]
   }
 
-  public async setContext(key: string, value: any): Promise<void> {
+  public setContext(key: string, value: any): void {
     this.viewContext[key] = value
-    await setContext(key, value)
+    setContext(key, value)
   }
 
   get scanState(): string {

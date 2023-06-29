@@ -24,8 +24,8 @@ import {
 } from './constants'
 import { Findings, ScanFinding, ScanFindingView } from './types'
 
-export const setContext = async (key: string, value: any): Promise<void> => {
-  await commands.executeCommand('setContext', `${CONTEXT_PREFIX}${key}`, value)
+export const setContext = (key: string, value: any): void => {
+  commands.executeCommand('setContext', `${CONTEXT_PREFIX}${key}`, value)
 }
 
 export const getActiveTextEditor = () => window.activeTextEditor

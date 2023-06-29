@@ -7,6 +7,7 @@ import {
   TextEditor,
 } from 'vscode'
 import {
+  ENABLE_INSTALL_AGENT,
   SPECTRAL_INSTALL,
   SPECTRAL_SCAN,
   SPECTRAL_SET_DSN,
@@ -32,12 +33,12 @@ import { ResultsView } from './results-view'
 import SecretStorageService from '../services/secret-storage-service'
 import { getWorkspaceFolders } from '../common/vs-code'
 import { AnalyticsService } from '../services/analytics-service'
-import { ExtensionContext as extensionContext } from '../common/extension-context'
+import { PersistenceContext } from '../common/persistence-context'
 
 export class SpectralExtension {
   private workspaceFolders: Array<string> = getWorkspaceFolders()
   private readonly contextService: ContextService
-  private readonly extensionContext: extensionContext
+  private readonly persistenceContext: PersistenceContext
   private readonly logger: LoggerService
   private readonly spectralAgentService: SpectralAgentService
   private readonly resultsView: ResultsView
@@ -45,14 +46,14 @@ export class SpectralExtension {
   constructor() {
     this.contextService = ContextService.getInstance()
     this.logger = LoggerService.getInstance()
-    this.extensionContext = extensionContext.getInstance()
+    this.persistenceContext = PersistenceContext.getInstance()
     this.spectralAgentService = new SpectralAgentService()
     this.resultsView = new ResultsView()
   }
 
   public async activate(vsCodeContext: ExtensionContext): Promise<void> {
     try {
-      this.extensionContext.setContext(vsCodeContext)
+      this.persistenceContext.setContext(vsCodeContext)
       this.initializeExtension(vsCodeContext)
       const isSpectralInstalled =
         await this.spectralAgentService.checkForSpectralBinary()
@@ -70,7 +71,7 @@ export class SpectralExtension {
     vsCodeContext: ExtensionContext
   ): Promise<void> {
     SecretStorageService.init(vsCodeContext)
-    await this.contextService.setContext(PRE_SCAN, true)
+    this.contextService.setContext(PRE_SCAN, true)
     this.registerCommands(vsCodeContext)
     this.registerEvents()
   }
@@ -79,22 +80,23 @@ export class SpectralExtension {
     isSpectralInstalled: Boolean
   ): Promise<void> {
     if (!isSpectralInstalled) {
-      await this.contextService.setContext(HAS_SPECTRAL_INSTALLED, false)
+      this.contextService.setContext(HAS_SPECTRAL_INSTALLED, false)
+      this.contextService.setContext(ENABLE_INSTALL_AGENT, true)
       return
     }
-    await this.contextService.setContext(HAS_SPECTRAL_INSTALLED, true)
+    this.contextService.setContext(HAS_SPECTRAL_INSTALLED, true)
     const secretStorageService = SecretStorageService.getInstance()
     const dsn = await secretStorageService.get(SPECTRAL_DSN)
     if (!dsn) {
-      await this.contextService.setContext(HAS_DSN, false)
+      this.contextService.setContext(HAS_DSN, false)
     } else {
-      await this.contextService.setContext(HAS_DSN, true)
+      this.contextService.setContext(HAS_DSN, true)
     }
     try {
       accessSync(path.join(`${SPECTRAL_FOLDER}/license`))
-      await this.contextService.setContext(HAS_LICENSE, true)
+      this.contextService.setContext(HAS_LICENSE, true)
     } catch (error) {
-      await this.contextService.setContext(HAS_LICENSE, false)
+      this.contextService.setContext(HAS_LICENSE, false)
     }
   }
 

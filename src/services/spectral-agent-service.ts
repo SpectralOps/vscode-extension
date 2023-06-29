@@ -19,17 +19,17 @@ import {
 } from '../common/types'
 import { formatWindowsPath, isWindows } from '../common/utils'
 import SecretStorageService from './secret-storage-service'
-import { ExtensionContext } from '../common/extension-context'
+import { PersistenceContext } from '../common/persistence-context'
 import { setupSpectral } from '../spectral/commands'
 
 export class SpectralAgentService {
   public findings: Findings
   public findingsAggregations: FindingsAggregations
-  private readonly extensionContext: ExtensionContext
+  private readonly persistenceContext: PersistenceContext
 
   constructor() {
     this.resetFindings()
-    this.extensionContext = ExtensionContext.getInstance()
+    this.persistenceContext = PersistenceContext.getInstance()
   }
 
   public installSpectral(): Promise<any> {
@@ -211,7 +211,7 @@ export class SpectralAgentService {
   }
 
   private getLastAgentUpdateDate(): number | undefined {
-    return this.extensionContext.getGlobalStateValue<number>(
+    return this.persistenceContext.getGlobalStateValue<number>(
       AGENT_LAST_UPDATE_DATE
     )
   }
