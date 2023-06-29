@@ -1,7 +1,13 @@
 import { ContextService } from '../services/context-service'
 import { SpectralAgentService } from '../services/spectral-agent-service'
 import { updateFindingsDecorations } from './results-view-decorations'
-import { HAS_DSN, PRE_SCAN, SCAN_STATE } from '../common/constants'
+import {
+  AGENT_LAST_UPDATE_DATE,
+  HAS_DSN,
+  HAS_SPECTRAL_INSTALLED,
+  PRE_SCAN,
+  SCAN_STATE,
+} from '../common/constants'
 import { SPECTRAL_VIEW_SECRETS } from '../common/constants'
 import {
   createStatusBarItem,
@@ -16,6 +22,7 @@ import { LoggerService } from '../services/logger-service'
 import { ResultsView } from './results-view'
 import SecretStorageService from '../services/secret-storage-service'
 import { AnalyticsService } from '../services/analytics-service'
+import { ExtensionContext } from '../common/extension-context'
 
 export const setDsn = () => {
   showInputBox(
@@ -24,7 +31,13 @@ export const setDsn = () => {
       placeHolder: 'https://spu-XXXXXXXXXXXXX@XXXXXX',
       title: 'Spectral DSN',
     },
-    storeDsn
+    storeDsn,
+    (value: string) => {
+      const regex =
+        /^https:\/\/spu-[a-zA-Z0-9]{32}@([a-zA-Z0-9_-]+\.)+[a-zA-Z]+$/
+      return regex.test(value)
+    },
+    'DSN structure is invalid'
   )
 }
 
@@ -83,6 +96,35 @@ export const scanWorkSpaceFolders = async ({
     getActiveTextEditor(),
     spectralAgentService.findings
   )
+}
+
+export const setupSpectral = async (
+  spectralAgentService: SpectralAgentService
+): Promise<void> => {
+  const inProgressStatusBarItem = createStatusBarItem({
+    location: 'right',
+    priority: 1,
+    text: `$(loading~spin)`,
+    tooltip: 'Installing Spectral',
+  })
+  try {
+    inProgressStatusBarItem.show()
+    await spectralAgentService.installSpectral()
+    inProgressStatusBarItem.dispose()
+    const contextService = ContextService.getInstance()
+    await contextService.setContext(HAS_SPECTRAL_INSTALLED, true)
+    const extensionContext = ExtensionContext.getInstance()
+    extensionContext.updateGlobalStateValue(AGENT_LAST_UPDATE_DATE, Date.now())
+  } catch (error) {
+    inProgressStatusBarItem.dispose()
+    const logger = LoggerService.getInstance()
+    logger.error(error)
+    ShowNotificationMessage({
+      messageType: 'error',
+      messageText: `Spectral installation failed`,
+      items: ['See output'],
+    }).then(() => logger.showOutput())
+  }
 }
 
 const scanWorkspaces = async ({

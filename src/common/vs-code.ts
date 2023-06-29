@@ -119,13 +119,24 @@ type InputBoxOptions = {
 
 export const showInputBox = (
   options: InputBoxOptions,
-  task: (value) => Promise<void>
+  task: (value) => Promise<void>,
+  inputValidation?: (value) => boolean,
+  validationMessage?: string
 ) => {
   window
     .showInputBox({
       password: options.password,
       placeHolder: options.placeHolder,
       title: options.title,
+      validateInput(value) {
+        if (inputValidation) {
+          const isValid = inputValidation(value)
+          if (!isValid) {
+            return validationMessage
+          }
+        }
+        return null
+      },
     })
     .then(async (value) => {
       if (value) {

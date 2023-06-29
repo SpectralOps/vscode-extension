@@ -1,4 +1,5 @@
 export const SPECTRAL_SCAN = 'spectral.scan'
+export const SPECTRAL_INSTALL = 'spectral.install'
 export const SPECTRAL_SHOW_OUTPUT = 'spectral.showOutput'
 export const SPECTRAL_SET_DSN = 'spectral.setDsn'
 export const CONTEXT_PREFIX = 'spectral:'
@@ -51,5 +52,6 @@ export const SPECTRAL_FOLDER = `${process.env.HOME}/.spectral`
 export const SPECTRAL_DSN = 'SPECTRAL_DSN'
 export const FINDING_POSITION_LINE_INDEX = 0
 export const FINDING_POSITION_COL_INDEX = 1
-export const PLAYBOOKS_URL =
-  'https://get.spectralops.io/api/v1/issues/playbooks'
+export const SPECTRAL_BASE_URL = 'https://get.spectralops.io'
+export const PLAYBOOKS_URL = `${SPECTRAL_BASE_URL}/api/v1/issues/playbooks`
+export const AGENT_LAST_UPDATE_DATE = 'spectral.agentLastUpdateDate'
