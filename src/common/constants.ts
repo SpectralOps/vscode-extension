@@ -11,6 +11,7 @@ export const ENABLE_INSTALL_AGENT = 'enableInstallAgent'
 export const PRE_SCAN = 'preScan'
 export const SPECTRAL_VIEW_SECRETS = 'spectral.views.secrets'
 export const SPECTRAL_VIEW_IAC = 'spectral.views.iac'
+export const SPECTRAL_VIEW_OSS = 'spectral.views.oss'
 
 export enum ScanState {
   preScan = 'preScan',
@@ -41,6 +42,13 @@ export enum FindingSeverityLevel {
 export enum FindingType {
   secret = 'secret',
   iac = 'iac',
+  oss = 'oss',
+}
+
+export enum ScanEngine {
+  secrets = 'secrets',
+  iac = 'iac',
+  oss = 'oss',
 }
 
 export const severityMapping = {
@@ -56,3 +64,8 @@ export const FINDING_POSITION_COL_INDEX = 1
 export const SPECTRAL_BASE_URL = 'https://get.spectralops.io'
 export const PLAYBOOKS_URL = `${SPECTRAL_BASE_URL}/api/v1/issues/playbooks`
 export const AGENT_LAST_UPDATE_DATE = 'spectral.agentLastUpdateDate'
+export const CONFIGURATION_IDENTIFIER = 'spectral'
+export const USE_IAC_ENGINE_SETTING = 'scan.engines.useIacEngine'
+export const USE_OSS_ENGINE_SETTING = 'scan.engines.useOssEngine'
+export const USE_SECRET_ENGINE_SETTING = 'scan.engines.useSecretsEngine'
+export const INCLUDE_TAGS_SETTING = 'scan.includeTags'

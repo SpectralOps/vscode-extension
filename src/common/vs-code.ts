@@ -203,10 +203,10 @@ export const getWorkspaceFolders = (): Array<string> =>
   workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) || []
 
 export const getFindingRange = (finding: ScanFinding): Range => {
-  const startRow = finding.position.start[FINDING_POSITION_LINE_INDEX]
-  const startCol = finding.position.start[FINDING_POSITION_COL_INDEX]
-  const endRow = finding.position.end[FINDING_POSITION_LINE_INDEX]
-  const endCol = finding.position.end[FINDING_POSITION_COL_INDEX]
+  const startRow = finding.position?.start[FINDING_POSITION_LINE_INDEX] || 0
+  const startCol = finding.position?.start[FINDING_POSITION_COL_INDEX] || 0
+  const endRow = finding.position?.end[FINDING_POSITION_LINE_INDEX] || 0
+  const endCol = finding.position?.end[FINDING_POSITION_COL_INDEX] || 0
   const startLine = startRow > 0 ? startRow - 1 : 1
   const startChar = startCol <= 1 ? startCol : startCol - 1
   const endLine = endRow > 0 ? endRow - 1 : 1
