@@ -54,7 +54,7 @@ The Spectral DSN (Data Source Name) is your personal key to communicate with Spe
 
 #### Spectral binary
 
-This extension requires the Spectral binary to be present and available in your PATH. You can install it by following the instructions in our docs.
+This extension requires the Spectral binary to be present and available. You can install it  from the extension or by following the instructions in our docs.
 
 ### How to Contribute
 
