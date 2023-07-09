@@ -18,17 +18,14 @@ import {
 } from '../common/types'
 import { formatWindowsPath, isWindows } from '../common/utils'
 import SecretStorageService from './secret-storage-service'
-import { PersistenceContext } from '../common/persistence-context'
 import { Configuration } from '../common/configuration'
 
 export class SpectralAgentService {
   public findings: Findings
   public findingsAggregations: FindingsAggregations
-  private readonly persistenceContext: PersistenceContext
 
   constructor() {
     this.resetFindings()
-    this.persistenceContext = PersistenceContext.getInstance()
   }
 
   public installSpectral(): Promise<any> {
