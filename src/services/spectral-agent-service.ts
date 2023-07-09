@@ -3,7 +3,6 @@ import { readFileSync, unlinkSync } from 'fs'
 import isEmpty from 'lodash/isEmpty'
 import path from 'path'
 import {
-  AGENT_LAST_UPDATE_DATE,
   FindingSeverity,
   FindingType,
   severityMapping,
@@ -20,7 +19,6 @@ import {
 import { formatWindowsPath, isWindows } from '../common/utils'
 import SecretStorageService from './secret-storage-service'
 import { PersistenceContext } from '../common/persistence-context'
-import { setupSpectral } from '../spectral/commands'
 import { Configuration } from '../common/configuration'
 
 export class SpectralAgentService {
@@ -65,12 +63,6 @@ export class SpectralAgentService {
         return resolve('')
       })
     })
-  }
-
-  public async updateSpectral(): Promise<any> {
-    if (this.isOneWeekPassedSinceLastUpdate()) {
-      await setupSpectral(this)
-    }
   }
 
   public checkForSpectralBinary(): Promise<Boolean> {
@@ -223,23 +215,5 @@ export class SpectralAgentService {
     } else {
       return itemSeverity
     }
-  }
-
-  private getLastAgentUpdateDate(): number | undefined {
-    return this.persistenceContext.getGlobalStateValue<number>(
-      AGENT_LAST_UPDATE_DATE
-    )
-  }
-
-  private isOneWeekPassedSinceLastUpdate(): boolean {
-    const lastUpdateDate = this.getLastAgentUpdateDate()
-    if (!lastUpdateDate) {
-      return true
-    }
-    const oneWeekInMs = 7 * 24 * 3600 * 1000
-    if (Date.now() - lastUpdateDate > oneWeekInMs) {
-      return true
-    }
-    return false
   }
 }
