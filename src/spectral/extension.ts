@@ -41,7 +41,7 @@ import { getWorkspaceFolders } from '../common/vs-code'
 import { AnalyticsService } from '../services/analytics-service'
 import { PersistenceContext } from '../common/persistence-context'
 import { Configuration } from '../common/configuration'
-import { isOneWeekPassedSinceLastUpdate } from '../common/spectral-utils'
+import { shouldUpdateSpectralAgent } from '../common/spectral-utils'
 
 export class SpectralExtension {
   private workspaceFolders: Array<string> = getWorkspaceFolders()
@@ -67,7 +67,7 @@ export class SpectralExtension {
       this.initializeExtension(vsCodeContext)
       const isSpectralInstalled =
         await this.spectralAgentService.checkForSpectralBinary()
-      if (isSpectralInstalled && isOneWeekPassedSinceLastUpdate()) {
+      if (isSpectralInstalled && shouldUpdateSpectralAgent()) {
         await setupSpectral(this.spectralAgentService)
       }
       this.setSpectralInstallationContext(isSpectralInstalled)

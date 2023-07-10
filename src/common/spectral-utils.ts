@@ -1,13 +1,21 @@
+import { Configuration } from './configuration'
 import { AGENT_LAST_UPDATE_DATE } from './constants'
 import { PersistenceContext } from './persistence-context'
 
-export const getLastAgentUpdateDate = (): number | undefined => {
+export const shouldUpdateSpectralAgent = (): boolean => {
+  return (
+    isOneWeekPassedSinceLastUpdate() &&
+    Configuration.getInstance().isAutoUpdateEnabled
+  )
+}
+
+const getLastAgentUpdateDate = (): number | undefined => {
   return PersistenceContext.getInstance().getGlobalStateValue<number>(
     AGENT_LAST_UPDATE_DATE
   )
 }
 
-export const isOneWeekPassedSinceLastUpdate = (): boolean => {
+const isOneWeekPassedSinceLastUpdate = (): boolean => {
   const lastUpdateDate = getLastAgentUpdateDate()
   if (!lastUpdateDate) {
     return true

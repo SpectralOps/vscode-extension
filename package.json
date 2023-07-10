@@ -153,34 +153,40 @@
 			"type": "object",
 			"title": "Spectral",
 			"properties": {
-					"spectral.scan.engines.useSecretsEngine": {
-							"type": "boolean",
-							"default": true,
-							"description": "Scan for secrets",
-							"scope": "resource"
-					},
-					"spectral.scan.engines.useIacEngine": {
-							"type": "boolean",
-							"default": false,
-							"description": "Scan for infrastructure as code",
-							"scope": "resource"
-					},
-					"spectral.scan.engines.useOssEngine": {
-						"type": "boolean",
-						"default": false,
-						"description": "Scan open source packages",
-						"scope": "resource"
+				"spectral.scan.engines.useSecretsEngine": {
+					"type": "boolean",
+					"default": true,
+					"description": "Scan for secrets",
+					"scope": "window"
 				},
-					"spectral.scan.includeTags": {
-							"type": "array",
-							"items": {
-								"type": "string"
-							},
-							"maxItems": 100,
-							"default": [],
-							"description": "Scan include tags",
-							"scope": "resource"
-					}
+				"spectral.scan.engines.useIacEngine": {
+					"type": "boolean",
+					"default": false,
+					"description": "Scan for infrastructure as code",
+					"scope": "window"
+				},
+				"spectral.scan.engines.useOssEngine": {
+					"type": "boolean",
+					"default": false,
+					"description": "Scan open source packages",
+					"scope": "window"
+				},
+				"spectral.scan.includeTags": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					},
+					"maxItems": 100,
+					"default": [],
+					"description": "Scan include tags",
+					"scope": "window"
+				},
+				"spectral.install.autoUpdate": {
+					"type": "boolean",
+					"default": true,
+					"description": "Auto update Spectral agent",
+					"scope": "window"
+				}
 			}
 		}
 	},
@@ -204,7 +210,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.37.0",
 		"@typescript-eslint/parser": "^4.26.0",
 		"esbuild": "^0.15.7",
-		"eslint": "^7.27.0",
+		"eslint": "^8.44.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"glob": "^7.1.7",
