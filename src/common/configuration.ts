@@ -1,5 +1,6 @@
 import { WorkspaceConfiguration } from 'vscode'
 import {
+  AUTO_UPDATE_SETTINGS,
   CONFIGURATION_IDENTIFIER,
   INCLUDE_TAGS_SETTING,
   ScanEngine,
@@ -49,6 +50,10 @@ export class Configuration {
     return this.extensionConfig
       .get<Array<string>>(INCLUDE_TAGS_SETTING, [])
       .join(',')
+  }
+
+  get isAutoUpdateEnabled() {
+    return this.extensionConfig.get<boolean>(AUTO_UPDATE_SETTINGS)
   }
 
   public updateConfiguration = (workspace) => {

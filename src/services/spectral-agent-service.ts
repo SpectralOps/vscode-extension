@@ -6,6 +6,7 @@ import {
   FindingSeverity,
   FindingType,
   severityMapping,
+  SPECTRAL_BASE_URL,
   SPECTRAL_DSN,
   SPECTRAL_FOLDER,
 } from '../common/constants'
@@ -16,7 +17,6 @@ import {
   ScanResult,
 } from '../common/types'
 import { formatWindowsPath, isWindows } from '../common/utils'
-
 import SecretStorageService from './secret-storage-service'
 import { Configuration } from '../common/configuration'
 
@@ -26,6 +26,40 @@ export class SpectralAgentService {
 
   constructor() {
     this.resetFindings()
+  }
+
+  public installSpectral(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let child
+      let command
+      if (isWindows()) {
+        command = `iwr ${SPECTRAL_BASE_URL}/latest/ps1 -useb | iex`
+        child = spawn('powershell.exe', [command])
+      } else {
+        command = `curl -L '${SPECTRAL_BASE_URL}/latest/x/sh' | sh`
+        child = spawn('/bin/sh', ['-c', command])
+      }
+
+      child.stderr.setEncoding('utf8')
+      const stdOut: string[] = []
+      const stderrChunks: string[] = []
+      child.stdout.on('data', (data) => {
+        stdOut.push(data.toString('utf8'))
+      })
+      child.stderr.on('data', (chunk) => {
+        return stderrChunks.push(chunk)
+      })
+      child.on('error', async (err) => {
+        reject(err)
+      })
+      child.on('close', (code) => {
+        if (!isEmpty(stderrChunks) && code !== 0) {
+          const error = stderrChunks.join('')
+          return reject(error)
+        }
+        return resolve('')
+      })
+    })
   }
 
   public checkForSpectralBinary(): Promise<Boolean> {

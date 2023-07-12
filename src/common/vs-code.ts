@@ -24,8 +24,8 @@ import {
 } from './constants'
 import { Findings, ScanFinding, ScanFindingView } from './types'
 
-export const setContext = async (key: string, value: any): Promise<void> => {
-  await commands.executeCommand('setContext', `${CONTEXT_PREFIX}${key}`, value)
+export const setContext = (key: string, value: any): void => {
+  commands.executeCommand('setContext', `${CONTEXT_PREFIX}${key}`, value)
 }
 
 export const getActiveTextEditor = () => window.activeTextEditor
@@ -119,13 +119,24 @@ type InputBoxOptions = {
 
 export const showInputBox = (
   options: InputBoxOptions,
-  task: (value) => Promise<void>
+  task: (value) => Promise<void>,
+  inputValidation?: (value) => boolean,
+  validationMessage?: string
 ) => {
   window
     .showInputBox({
       password: options.password,
       placeHolder: options.placeHolder,
       title: options.title,
+      validateInput(value) {
+        if (inputValidation) {
+          const isValid = inputValidation(value)
+          if (!isValid) {
+            return validationMessage
+          }
+        }
+        return null
+      },
     })
     .then(async (value) => {
       if (value) {

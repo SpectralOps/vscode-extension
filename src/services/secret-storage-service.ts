@@ -15,8 +15,8 @@ export default class SecretStorageService {
     return this.secretStorage.get(key) as Promise<string | undefined>
   }
 
-  store(key: string, value: string): Promise<void> {
-    return this.secretStorage.store(key, value) as Promise<void>
+  store(key: string, value: string): void {
+    this.secretStorage.store(key, value) as Promise<void>
   }
 
   delete(key: string): Promise<void> {

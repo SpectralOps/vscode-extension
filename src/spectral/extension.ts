@@ -8,6 +8,8 @@ import {
   ConfigurationChangeEvent,
 } from 'vscode'
 import {
+  ENABLE_INSTALL_AGENT,
+  SPECTRAL_INSTALL,
   CONFIGURATION_IDENTIFIER,
   INCLUDE_TAGS_SETTING,
   SPECTRAL_SCAN,
@@ -25,7 +27,7 @@ import {
 } from '../common/constants'
 import { ContextService } from '../services/context-service'
 import { SpectralAgentService } from '../services/spectral-agent-service'
-import { scanWorkSpaceFolders, setDsn } from './commands'
+import { scanWorkSpaceFolders, setDsn, setupSpectral } from './commands'
 import concat from 'lodash/concat'
 import pullAll from 'lodash/pullAll'
 import { updateFindingsDecorations } from './results-view-decorations'
@@ -37,11 +39,14 @@ import { ResultsView } from './results-view'
 import SecretStorageService from '../services/secret-storage-service'
 import { getWorkspaceFolders } from '../common/vs-code'
 import { AnalyticsService } from '../services/analytics-service'
+import { PersistenceContext } from '../common/persistence-context'
 import { Configuration } from '../common/configuration'
+import { shouldUpdateSpectralAgent } from '../common/spectral-utils'
 
 export class SpectralExtension {
   private workspaceFolders: Array<string> = getWorkspaceFolders()
   private readonly contextService: ContextService
+  private readonly persistenceContext: PersistenceContext
   private readonly logger: LoggerService
   private readonly configuration: Configuration
   private readonly spectralAgentService: SpectralAgentService
@@ -50,6 +55,7 @@ export class SpectralExtension {
   constructor() {
     this.contextService = ContextService.getInstance()
     this.logger = LoggerService.getInstance()
+    this.persistenceContext = PersistenceContext.getInstance()
     this.configuration = Configuration.getInstance(workspace)
     this.spectralAgentService = new SpectralAgentService()
     this.resultsView = new ResultsView()
@@ -57,9 +63,13 @@ export class SpectralExtension {
 
   public async activate(vsCodeContext: ExtensionContext): Promise<void> {
     try {
+      this.persistenceContext.setContext(vsCodeContext)
       this.initializeExtension(vsCodeContext)
       const isSpectralInstalled =
         await this.spectralAgentService.checkForSpectralBinary()
+      if (isSpectralInstalled && shouldUpdateSpectralAgent()) {
+        await setupSpectral(this.spectralAgentService)
+      }
       this.setSpectralInstallationContext(isSpectralInstalled)
       AnalyticsService.init()
     } catch (error) {
@@ -71,7 +81,7 @@ export class SpectralExtension {
     vsCodeContext: ExtensionContext
   ): Promise<void> {
     SecretStorageService.init(vsCodeContext)
-    await this.contextService.setContext(PRE_SCAN, true)
+    this.contextService.setContext(PRE_SCAN, true)
     this.registerCommands(vsCodeContext)
     this.registerEvents()
   }
@@ -80,27 +90,31 @@ export class SpectralExtension {
     isSpectralInstalled: Boolean
   ): Promise<void> {
     if (!isSpectralInstalled) {
-      await this.contextService.setContext(HAS_SPECTRAL_INSTALLED, false)
+      this.contextService.setContext(HAS_SPECTRAL_INSTALLED, false)
+      this.contextService.setContext(ENABLE_INSTALL_AGENT, true)
       return
     }
-    await this.contextService.setContext(HAS_SPECTRAL_INSTALLED, true)
+    this.contextService.setContext(HAS_SPECTRAL_INSTALLED, true)
     const secretStorageService = SecretStorageService.getInstance()
     const dsn = await secretStorageService.get(SPECTRAL_DSN)
     if (!dsn) {
-      await this.contextService.setContext(HAS_DSN, false)
+      this.contextService.setContext(HAS_DSN, false)
     } else {
-      await this.contextService.setContext(HAS_DSN, true)
+      this.contextService.setContext(HAS_DSN, true)
     }
     try {
       accessSync(path.join(`${SPECTRAL_FOLDER}/license`))
-      await this.contextService.setContext(HAS_LICENSE, true)
+      this.contextService.setContext(HAS_LICENSE, true)
     } catch (error) {
-      await this.contextService.setContext(HAS_LICENSE, false)
+      this.contextService.setContext(HAS_LICENSE, false)
     }
   }
 
   private registerCommands(vsCodeContext: ExtensionContext): void {
     vsCodeContext.subscriptions.push(
+      commands.registerCommand(SPECTRAL_INSTALL, () =>
+        setupSpectral(this.spectralAgentService)
+      ),
       commands.registerCommand(SPECTRAL_SCAN, () =>
         scanWorkSpaceFolders({
           foldersPath: this.workspaceFolders,

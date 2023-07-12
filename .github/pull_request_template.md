@@ -17,3 +17,4 @@
 - [ ] Tests
 - [ ] Documentation
 - [ ] Linting
+- [ ] Change log
