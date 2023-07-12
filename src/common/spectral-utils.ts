@@ -4,12 +4,11 @@ import { PersistenceContext } from './persistence-context'
 
 export const shouldUpdateSpectralAgent = (): boolean => {
   return (
-    isOneWeekPassedSinceLastUpdate() &&
-    Configuration.getInstance().isAutoUpdateEnabled
+    isOverUpdateThreshold() && Configuration.getInstance().isAutoUpdateEnabled
   )
 }
 
-const isOneWeekPassedSinceLastUpdate = (): boolean => {
+const isOverUpdateThreshold = (): boolean => {
   const lastUpdateDate =
     PersistenceContext.getInstance().getGlobalStateValue<number>(
       AGENT_LAST_UPDATE_DATE
