@@ -40,7 +40,8 @@ First, you'll now need to download Spectral binary. Additionally, you'll need to
 
 - Sign up and get your SpectralOps account [here.](https://get.spectralops.io/signup) If you already have an account, sign in and do the next step.
 - From Settings -> Organization, copy your DSN.
-- In Visual Studio Code, set your DSN in the SpectralOps extension.
+- Set your DSN in the SpectralOps extension.
+- In the extension configuration set the engines you would like to run and tags to include.
 
 ## Usage
 
@@ -54,7 +55,7 @@ The Spectral DSN (Data Source Name) is your personal key to communicate with Spe
 
 #### Spectral binary
 
-This extension requires the Spectral binary to be present and available. You can install it  from the extension or by following the instructions in our docs.
+This extension requires the Spectral binary to be present and available. You can install it from the extension or by following the instructions in our docs. The extension will automatically update Spectral agent, if you wish to disable it you can do it from the extension configuration.
 
 ### How to Contribute
 
