@@ -67,10 +67,11 @@ export class SpectralExtension {
       this.initializeExtension(vsCodeContext)
       const isSpectralInstalled =
         await this.spectralAgentService.checkForSpectralBinary()
+
+      this.setSpectralInstallationContext(isSpectralInstalled)
       if (isSpectralInstalled && shouldUpdateSpectralAgent()) {
         await setupSpectral(this.spectralAgentService)
       }
-      this.setSpectralInstallationContext(isSpectralInstalled)
       AnalyticsService.init()
     } catch (error) {
       this.logger.error(error)
@@ -89,9 +90,9 @@ export class SpectralExtension {
   public async setSpectralInstallationContext(
     isSpectralInstalled: Boolean
   ): Promise<void> {
+    this.contextService.setContext(ENABLE_INSTALL_AGENT, true)
     if (!isSpectralInstalled) {
       this.contextService.setContext(HAS_SPECTRAL_INSTALLED, false)
-      this.contextService.setContext(ENABLE_INSTALL_AGENT, true)
       return
     }
     this.contextService.setContext(HAS_SPECTRAL_INSTALLED, true)

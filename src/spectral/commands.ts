@@ -109,35 +109,32 @@ export const setupSpectral = async (
     tooltip: 'Installing Spectral',
   })
   const contextService = ContextService.getInstance()
-  if (contextService.getContext(ENABLE_INSTALL_AGENT)) {
-    try {
-      contextService.setContext(ENABLE_INSTALL_AGENT, false)
-      inProgressStatusBarItem.show()
-      await spectralAgentService.installSpectral()
-      inProgressStatusBarItem.dispose()
-      contextService.setContext(HAS_SPECTRAL_INSTALLED, true)
-      const extensionContext = PersistenceContext.getInstance()
-      extensionContext.updateGlobalStateValue(
-        AGENT_LAST_UPDATE_DATE,
-        Date.now()
-      )
-    } catch (error) {
-      inProgressStatusBarItem.dispose()
-      const logger = LoggerService.getInstance()
-      logger.error(error)
-      ShowNotificationMessage({
-        messageType: 'error',
-        messageText: `Spectral installation failed`,
-        items: ['See output'],
-      }).then(() => logger.showOutput())
-    }
-    contextService.setContext(ENABLE_INSTALL_AGENT, true)
-  } else {
+  try {
+    contextService.setContext(ENABLE_INSTALL_AGENT, false)
+    inProgressStatusBarItem.show()
     ShowNotificationMessage({
       messageType: 'info',
       messageText: `Spectral installation is in progress`,
     })
+    await spectralAgentService.installSpectral()
+    inProgressStatusBarItem.dispose()
+    contextService.setContext(HAS_SPECTRAL_INSTALLED, true)
+    const extensionContext = PersistenceContext.getInstance()
+    extensionContext.updateGlobalStateValue(AGENT_LAST_UPDATE_DATE, Date.now())
+  } catch (error) {
+    inProgressStatusBarItem.dispose()
+    const logger = LoggerService.getInstance()
+    logger.error(error)
+    ShowNotificationMessage({
+      messageType: 'error',
+      messageText: `Spectral installation failed`,
+      items: ['See output'],
+    }).then(() => logger.showOutput())
   }
+  ShowNotificationMessage({
+    messageType: 'info',
+    messageText: `Spectral installation completed`,
+  })
 }
 
 const scanWorkspaces = async ({

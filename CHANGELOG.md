@@ -1,4 +1,7 @@
 # SpectralOps - Automated Code Security Change Log
+## [1.1.2]
+
+- Fix Spectral installtion notification bug
 ## [1.1.1]
 
 - Install Spectral from the extension
