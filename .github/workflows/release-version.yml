@@ -48,7 +48,7 @@ jobs:
         run: yarn vscode:prepublish
 
       - name: Setup VSCE
-        run: yarn global add vsce@2.11.0
+        run: yarn global add @vscode/vsce@2.21.0
 
       - name: Publish to Marketplace
         run: vsce publish -p ${{ secrets.MARKETPLACE_TOKEN }}
